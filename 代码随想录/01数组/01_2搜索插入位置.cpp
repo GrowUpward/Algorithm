@@ -1,35 +1,35 @@
 /*
 * 
-¸ø¶¨Ò»¸öÅÅĞòÊı×éºÍÒ»¸öÄ¿±êÖµ£¬ÔÚÊı×éÖĞÕÒµ½Ä¿±êÖµ£¬²¢·µ»ØÆäË÷Òı¡£
-Èç¹ûÄ¿±êÖµ²»´æÔÚÓÚÊı×éÖĞ£¬·µ»ØËü½«»á±»°´Ë³Ğò²åÈëµÄÎ»ÖÃ¡£
-Äã¿ÉÒÔ¼ÙÉèÊı×éÖĞÎŞÖØ¸´ÔªËØ¡£
+ç»™å®šä¸€ä¸ªæ’åºæ•°ç»„å’Œä¸€ä¸ªç›®æ ‡å€¼ï¼Œåœ¨æ•°ç»„ä¸­æ‰¾åˆ°ç›®æ ‡å€¼ï¼Œå¹¶è¿”å›å…¶ç´¢å¼•ã€‚
+å¦‚æœç›®æ ‡å€¼ä¸å­˜åœ¨äºæ•°ç»„ä¸­ï¼Œè¿”å›å®ƒå°†ä¼šè¢«æŒ‰é¡ºåºæ’å…¥çš„ä½ç½®ã€‚
+ä½ å¯ä»¥å‡è®¾æ•°ç»„ä¸­æ— é‡å¤å…ƒç´ ã€‚
 
-Ê¾Àı 1:
-ÊäÈë: [1,3,5,6], 5
-Êä³ö: 2
+ç¤ºä¾‹ 1:
+è¾“å…¥: [1,3,5,6], 5
+è¾“å‡º: 2
 
-Ê¾Àı 2:
-ÊäÈë: [1,3,5,6], 2
-Êä³ö: 1
+ç¤ºä¾‹ 2:
+è¾“å…¥: [1,3,5,6], 2
+è¾“å‡º: 1
 */
 #include <iostream>
 #include <vector>
 using namespace std;
 class Solution {
 public:
-    //±©Á¦·¨
+    //æš´åŠ›æ³•
     int searchInsert1(vector<int>& nums, int target) {
         int i = 0;
         for (i=0; i<nums.size(); i++)
         {
 
-            //if (nums[i] < target)//Ö»ÒªĞ¡¾Í+
+            //if (nums[i] < target)//åªè¦å°å°±+
             //{
-            //    cout << i<<" ooo" << endl;//²»×ö´¦Àí
+            //    cout << i<<" ooo" << endl;//ä¸åšå¤„ç†
             //}
             //else
             //{
-            //    return i;//=ºÍ>·µ»ØµÄ½á¹ûÒ»Ñù£¬¶¼ÊÇ´ËÎ»ÖÃ
+            //    return i;//=å’Œ>è¿”å›çš„ç»“æœä¸€æ ·ï¼Œéƒ½æ˜¯æ­¤ä½ç½®
             //}
             if (nums[i] >= target)
             {
@@ -38,37 +38,47 @@ public:
         }
         return i;
     }
-    //¶ş·Ö·¨
-    int searchInsert2(vector<int>& nums, int target) {
-        int left = 0;
-        int right = nums.size() - 1;
-        while (left <= right)
-        {
-            int mid = left + (right-left) / 2;
-            if (target == nums[mid])
-            {
-                return mid;//ÕÒµ½ÁËÏàµÈµÄ
-            }
-            else if (target < nums[mid])
-            {
-                right = mid - 1;//µ½×ó±ßÕÒ
-            }
-            else//target >left
-            {
-                left = mid + 1;
-            }
-        }
-        return left;//right+1 Ã»ÕÒµ½£¬½áÊø
-    }
+    //äºŒåˆ†æ³•
+	//ã€è§£é¢˜æ€è·¯ã€‘ï¼šå…ˆæœç´¢ä¸€éï¼Œæ‰¾åˆ°å°±è¿”å›ç´¢å¼•ï¼ˆäºŒåˆ†æ³•ï¼‰ + æ²¡æ‰¾åˆ°æ€ä¹ˆè¿”å›
+	int searchInsert2(vector<int>&nums, int target)
+	{
+		int left = 0;
+		int right = nums.size() - 1;
+
+		while (left <= right)
+		{
+			int middle = left + (right - left) / 2;
+			if (nums[middle] > target)//targetåœ¨å·¦è¾¹
+			{
+				right = middle - 1;//æ›´æ–°å·¦åŒºåŸŸçš„å³è¾¹ç•Œ
+			}
+			else if (nums[middle] < target)//targetåœ¨å³è¾¹
+			{
+				left = middle + 1;//æ›´æ–°å³åŒºåŸŸçš„å·¦è¾¹ç•Œ
+			}
+			else // æ‰¾åˆ°äº†target
+			{
+				return middle;//è¿”å›ç´¢å¼•
+			}
+		}
+		//ä»¥â€œå·¦é—­å³é—­â€`while(left <= right)`çš„æ–¹å¼ï¼Œè¦æ˜¯æ²¡æ‰¾åˆ°ï¼Œç»“æŸå¾ªç¯åï¼Œleft > rightï¼Œä¸”left = right + 1ã€‚
+
+		//æ²¡æ‰¾åˆ°çš„å¯èƒ½æƒ…å†µæœ‰ä»¥ä¸‹3ç§ï¼š
+		//	â‘ ç›®æ ‡å€¼åœ¨æ•°ç»„æ‰€æœ‰å…ƒç´ ä¹‹å‰ï¼Œæ­¤æ—¶left = 0, right = -1, å¾…æ’å…¥ä½ç½®åº”ä¸º0
+		//	â‘¡ç›®æ ‡å€¼åœ¨æ’å…¥æ•°ç»„æ‰€æœ‰å…ƒç´ ä¹‹ä¸­ï¼Œæ­¤æ—¶å¾…æ’å…¥å…ƒç´ åº”ä½äºrightå’Œleftä¸­é—´ï¼Œå¾…æ’å…¥ä½ç½®åº”ä¸ºright + 1æˆ–left
+		//	â‘¢ç›®æ ‡å€¼åœ¨æ•°ç»„æ‰€æœ‰å…ƒç´ ä¹‹åçš„æƒ…å†µï¼Œæ­¤æ—¶left = size, right = size - 1
+		//	æ‰€æœ‰ï¼Œåº”return right + 1 æˆ–è€…return left
+		return right + 1;
+	}
 
 };
 int main()
 {
     vector<int>nums;
     nums = { 1,3,6,8 };
-    int target =6;
+    int target =5;
     Solution s;
-    cout << s.searchInsert1(nums, target);
+    //cout << s.searchInsert1(nums, target);
     cout << s.searchInsert2(nums, target);
 
 }
