@@ -1,83 +1,115 @@
 /*
 * 
-¸ø¶¨Ò»¸ö°´ÕÕÉıĞòÅÅÁĞµÄÕûÊıÊı×é nums£¬ºÍÒ»¸öÄ¿±êÖµ target¡£ÕÒ³ö¸ø¶¨Ä¿±êÖµÔÚÊı×éÖĞµÄ¿ªÊ¼Î»ÖÃºÍ½áÊøÎ»ÖÃ¡£
+ç»™å®šä¸€ä¸ªæŒ‰ç…§å‡åºæ’åˆ—çš„æ•´æ•°æ•°ç»„ numsï¼Œå’Œä¸€ä¸ªç›®æ ‡å€¼ targetã€‚æ‰¾å‡ºç»™å®šç›®æ ‡å€¼åœ¨æ•°ç»„ä¸­çš„å¼€å§‹ä½ç½®å’Œç»“æŸä½ç½®ã€‚
 
-Èç¹ûÊı×éÖĞ²»´æÔÚÄ¿±êÖµ target£¬·µ»Ø [-1, -1]¡£
+å¦‚æœæ•°ç»„ä¸­ä¸å­˜åœ¨ç›®æ ‡å€¼ targetï¼Œè¿”å› [-1, -1]ã€‚æ—¶é—´å¤æ‚åº¦ä¸ºlogn
 
-Ê¾Àı 1£º
+ç¤ºä¾‹ 1ï¼š
 
-ÊäÈë£ºnums = [5,7,7,8,8,10], target = 8
-Êä³ö£º[3,4]
-Ê¾Àı 2£º
+è¾“å…¥ï¼šnums = [5,7,7,8,8,10], target = 8
+è¾“å‡ºï¼š[3,4]
+ç¤ºä¾‹ 2ï¼š
 
-ÊäÈë£ºnums = [5,7,7,8,8,10], target = 6
-Êä³ö£º[-1,-1]
+è¾“å…¥ï¼šnums = [5,7,7,8,8,10], target = 6
+è¾“å‡ºï¼š[-1,-1]
 */
 #include <iostream>
 #include <vector>
 using namespace std;
 class Solution {
 public:
-    //±©Á¦·¨
-    int* searchInsert1(vector<int>& nums, int target)
+    //æš´åŠ›æ³•
+    vector<int> searchInsert1(vector<int>& nums, int target)
     {
         int i = 0;
-        int a[2];
+        vector<int> a(2,0);
         for (; i < nums.size(); i++)
         {
             if (nums[i] == target)
             {
                 a[0] = i;
-                //2:=£¬3£º=,½øÈë£¬ÔÙ¼ÓÁËÒ»´Î
+                //2:=ï¼Œ3ï¼š=,è¿›å…¥ï¼Œå†åŠ äº†ä¸€æ¬¡
                 while (nums[i] == target && i < nums.size())
                 {
-                    i++;//Ö±µ½ÕÒµ½×îºóÒ»¸öÏàµÈµÄ
+                    i++;//ç›´åˆ°æ‰¾åˆ°æœ€åä¸€ä¸ªç›¸ç­‰çš„
                 }
-                a[1] = i-1;//×îºóÒ»´ÎµÈµÄÊ±ºò½øÈëÁËÑ­»·£¬¼ÓÁË£¬ÕâÀïÒª¼õÈ¥
+                a[1] = i-1;//æœ€åä¸€æ¬¡ç­‰çš„æ—¶å€™è¿›å…¥äº†å¾ªç¯ï¼ŒåŠ äº†ï¼Œè¿™é‡Œè¦å‡å»
                 return a;
             }
         }
         a[0] = a[1] = -1;
         return a;
     }
-    //¶ş·Ö·¨
-    int* searchInsert2(vector<int>& nums, int target) {
-        int a[2];
+
+    //äºŒåˆ†æ³•
+    vector<int> searchInsert2(vector<int>& nums, int target) {
+        
+        if (target<nums[0] || target >nums[nums.size() - 1])
+        {
+            return { -1,-1 };
+        }
+        else {
+            int leftBorder = searchLeftBorder(nums, target);
+            int rightBorder = searchRightBorder(nums, target);
+            return { leftBorder,rightBorder };
+        }
+        
+    }
+    int searchRightBorder(vector<int>& nums, int target)//å¯»æ‰¾å³è¾¹ç•Œ
+    {
         int left = 0;
         int right = nums.size() - 1;
-
         while (left <= right)
         {
-            int mid = left + (right-left) / 2;
-            if (target == nums[mid])
+            int mid = left + (right - left) / 2;
+            if (nums[mid] <= target)//åªè¦targetè¿˜æœ‰å¯èƒ½åœ¨å³åŒºåŸŸï¼ˆ=æ˜¯ä¸ºäº†ç¡®ä¿æ‰¾åˆ°åç»­çš„å€¼ï¼Œåªæ‰¾åˆ°ä¸€ä¸ªå€¼ç­‰äºç›®æ ‡å€¼æ—¶ï¼Œæˆ‘ä»¬ä¸èƒ½ç«‹å³åœæ­¢æœç´¢ï¼‰
             {
-                return a;//ÕÒµ½ÁËÏàµÈµÄ
+                left = mid + 1;//å·¦è¾¹ç•Œå°±ä¸€ç›´å‘å³åŒºåŸŸç§»åŠ¨
             }
-            else if (target < nums[mid])
+            else //æœç´¢å€¼ä¸€æ—¦è¶…è¿‡target
             {
-                right = mid - 1;//µ½×ó±ßÕÒ
+                right = mid - 1;//å°±é©¬ä¸Šå›é€€,æ­¤æ—¶æ­£æ˜¯å³è¾¹ç•Œ
+            }       
+        }
+        if (nums[right] != target) {//å¯èƒ½åœ¨æ•°æ®ä¸­ä¸å­˜åœ¨target
+            right = -1;
+        }
+        return right ;
+           
+    }
+    int searchLeftBorder(vector<int>& nums, int target)//å¯»æ‰¾å·¦è¾¹ç•Œ
+    {
+        int left = 0;
+        int right = nums.size() - 1;
+        while (left <= right)
+        {
+            int mid = left + (right - left) / 2;
+            if (nums[mid] >= target)//åªè¦targetè¿˜æœ‰å¯èƒ½åœ¨å·¦åŒºåŸŸï¼ˆ=æ˜¯ä¸ºäº†ç¡®ä¿æ‰¾åˆ°åç»­çš„å€¼ï¼Œåªæ‰¾åˆ°ä¸€ä¸ªå€¼ç­‰äºç›®æ ‡å€¼æ—¶ï¼Œæˆ‘ä»¬ä¸èƒ½ç«‹å³åœæ­¢æœç´¢ï¼‰
+            {
+                right = mid - 1;//å³è¾¹ç•Œå°±ä¸€ç›´å‘å·¦åŒºåŸŸç§»åŠ¨
             }
-            else//target >left
+            else //æœç´¢å€¼ä¸€æ—¦è¶…è¿‡target
             {
-                left = mid + 1;
+                left = mid + 1;//å°±é©¬ä¸Šå›é€€,æ­¤æ—¶æ­£æ˜¯å·¦è¾¹ç•Œ
             }
         }
-        return a;//right+1 Ã»ÕÒµ½£¬½áÊø
+        if (nums[left] != target) {//å¯èƒ½åœ¨æ•°æ®ä¸­ä¸å­˜åœ¨target
+            left = -1;
+        }
+        return left;
+
     }
 
 };
 int main()
 {
     vector<int>nums;
-    nums = { 1,3,6,8 };
-    int target =5;//[2,3]
+    nums = { 5,7,7,8,8,10};
+    int target =6;//[2,3]
     Solution s;
-    //int a[2];
-    int* p;
-    p=s.searchInsert1(nums, target);
-    cout << "[" << p[0] << "," << p[1] << "]" << endl;
-    cout <<endl;
-    p = s.searchInsert2(nums, target);
-    cout << "[" << p[0] << "," << p[1] << "]" << endl;
+    vector<int> res;
+    //res = s.searchInsert1(nums, target);
+    res = s.searchInsert2(nums, target);
+     cout << "[" << res[0] << "," << res[1] << "]" << endl;
 
 }
